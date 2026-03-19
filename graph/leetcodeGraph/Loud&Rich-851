@@ -1,0 +1,43 @@
+class Solution {
+public:
+    int bfs(int ind, vector<vector<int>>& rev, vector<int>& quiet) {
+        vector<bool> vis(quiet.size());
+        queue<int> q;
+        q.push(ind);
+        int ans = ind;
+        vis[ind] = true;
+
+        while (!q.empty()) {
+            int node = q.front();
+
+            if (quiet[node] < quiet[ans]) {
+                ans = node;
+            }
+
+            q.pop();
+            for (int neighbor : rev[node]) {
+                if (!vis[neighbor]) {
+                    q.push(neighbor);
+                    vis[neighbor] = true;
+                }
+            }
+        }
+        return ans;
+    }
+    vector<int> loudAndRich(vector<vector<int>>& richer, vector<int>& quiet) {
+        vector<vector<int>> rev(quiet.size());
+        for (int i = 0; i < richer.size(); i++) {
+            int a = richer[i][0];
+            int b = richer[i][1];
+            rev[b].push_back(a);
+        }
+
+        vector<int> ans(quiet.size());
+        // vector<bool> vis(quiet.size(), false);
+        for (int i = 0; i < quiet.size(); i++) {
+            // vector<int> store;
+            ans[i] = bfs(i, rev, quiet);
+        }
+        return ans;
+    }
+};
